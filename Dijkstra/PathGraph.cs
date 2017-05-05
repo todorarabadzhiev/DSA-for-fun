@@ -6,9 +6,9 @@ namespace Dijkstra
 {
     public class PathGraph
     {
-        public ICollection<Node> PathNodes { get; set; }
-        public ICollection<Edge> PathEdges { get; set; }
-        public PathGraph(ICollection<Edge> edges)
+        public ICollection<INode> PathNodes { get; set; }
+        public ICollection<IEdge> PathEdges { get; set; }
+        public PathGraph(ICollection<IEdge> edges)
         {
             if (edges == null)
             {
@@ -16,11 +16,11 @@ namespace Dijkstra
             }
 
             this.PathEdges = edges;
-            this.PathNodes = new List<Node>();
+            this.PathNodes = new List<INode>();
             this.GetNodesFromEdges(edges);
         }
 
-        public void AddEdge(Edge edge)
+        public void AddEdge(IEdge edge)
         {
             if (edge == null)
             {
@@ -33,12 +33,12 @@ namespace Dijkstra
             }
 
             this.PathEdges.Add(edge);
-            this.GetNodesFromEdges(new List<Edge>() { edge });
+            this.GetNodesFromEdges(new List<IEdge>() { edge });
             edge.StartNode.AddConnection(edge);
             edge.EndNode.AddConnection(edge);
         }
 
-        public void RemoveEdge(Edge edge)
+        public void RemoveEdge(IEdge edge)
         {
             if (edge == null)
             {
@@ -55,7 +55,7 @@ namespace Dijkstra
             this.PathEdges.Remove(edge);
         }
 
-        public void RemoveNode(Node node)
+        public void RemoveNode(INode node)
         {
             if (node == null)
             {
@@ -67,7 +67,7 @@ namespace Dijkstra
                 throw new ArgumentException("Node not in Path");
             }
 
-            foreach (Edge connection in node.Connections)
+            foreach (IEdge connection in node.Connections)
             {
                 if (connection.StartNode == node)
                 {
@@ -84,8 +84,8 @@ namespace Dijkstra
             node.Connections.Clear();
             this.PathNodes.Remove(node);
         }
-
-        public void FindShortestPathWithDijkstra(Node node_start, Node node_end)
+        
+        public IPathToNode FindShortestPathWithDijkstra(IPathToNode node_start, IPathToNode node_end)
         {
             if (!this.PathNodes.Contains(node_start))
             {
@@ -97,26 +97,23 @@ namespace Dijkstra
                 throw new ArgumentException($"No such node {node_end.NodeId}!");
             }
 
-            ICollection<Node> activeNodes = new List<Node>();// Nodes To Pass
-            ICollection<Node> passedNodes = new List<Node>();// Passed Nodes
-            float totalValue = 0;
-            foreach (Node node in this.PathNodes)
+            ICollection<INode> activeNodes = new List<INode>();
+            foreach (IPathToNode node in this.PathNodes)
             {
                 node.Value = int.MaxValue;
                 activeNodes.Add(node);
             }
 
             node_start.Value = 0;
-            Node currentNode = node_start;
+            IPathToNode currentNode = node_start;
 
             while (currentNode != node_end)
             {
-                passedNodes.Add(currentNode);
                 activeNodes.Remove(currentNode);
                 currentNode.UpdateNeighbourValuesInCollection(activeNodes);
 
                 float minValue = int.MaxValue;
-                foreach (Node node in activeNodes)
+                foreach (IPathToNode node in activeNodes)
                 {
                     if (node.Value == minValue && node == node_end)
                     {
@@ -129,23 +126,15 @@ namespace Dijkstra
                         currentNode = node;
                     }
                 }
-
-                totalValue = currentNode.Value;
             }
 
-            Console.WriteLine($"Total Value: {totalValue}");
-            foreach (Node node in currentNode.CurrentPathToNode)
-            {
-                Console.WriteLine($"{node.NodeId} passed");
-            }
-
-            Console.WriteLine($"{currentNode.NodeId} reached");
+            return currentNode;
         }
 
         public override string ToString()
         {
             StringBuilder graphInfo = new StringBuilder();
-            foreach (Node node in this.PathNodes)
+            foreach (INode node in this.PathNodes)
             {
                 graphInfo.Append(node);
             }
@@ -153,9 +142,9 @@ namespace Dijkstra
             return graphInfo.ToString();
         }
 
-        private void GetNodesFromEdges(IEnumerable<Edge> edges)
+        private void GetNodesFromEdges(IEnumerable<IEdge> edges)
         {
-            foreach (Edge edge in edges)
+            foreach (IEdge edge in edges)
             {
                 if (!this.PathNodes.Contains(edge.StartNode))
                 {

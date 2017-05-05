@@ -3,14 +3,14 @@ using System.Text;
 
 namespace Dijkstra
 {
-    public class Edge
+    public class Edge : IEdge
     {
         // NO LOOPS AND ONLY SINGLE CONNECTIONS BETWEEN NODES
-        public Node StartNode { get; set; }
-        public Node EndNode { get; set; }
+        public INode StartNode { get; set; }
+        public INode EndNode { get; set; }
         public float Weight { get; set; }
 
-        public Edge(Node startNode, Node endNode, float weight)
+        public Edge(INode startNode, INode endNode, float weight)
         {
             if (startNode == null)
             {

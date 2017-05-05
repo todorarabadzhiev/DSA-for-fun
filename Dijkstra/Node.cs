@@ -4,27 +4,32 @@ using System.Text;
 
 namespace Dijkstra
 {
-    public class Node
+    public class Node : INode, IPathToNode
     {
         private const string boundaryString = "--------------------";
 
-        public int NodeId { get; set; }
+        public string NodeId { get; set; }
         public float Value { get; set; }
 
-        public ICollection<Edge> Connections { get; set; }
-        public ICollection<Node> NeighbourNodes { get; set; }
-        public ICollection<Node> CurrentPathToNode { get; set; }
+        public ICollection<IEdge> Connections { get; set; }
+        public ICollection<INode> NeighbourNodes { get; set; }
+        public ICollection<INode> CurrentPathToNode { get; set; }
 
-        public Node(int id, float value)
+        public Node(string id)
         {
             this.NodeId = id;
-            this.Value = value;
-            this.Connections = new List<Edge>();
-            this.NeighbourNodes = new List<Node>();
-            this.CurrentPathToNode = new List<Node>();
+            this.Connections = new List<IEdge>();
+            this.NeighbourNodes = new List<INode>();
+            this.CurrentPathToNode = new List<INode>();
         }
 
-        public void AddConnection(Edge edge)
+        public Node(string id, float value)
+            : this(id)
+        {
+            this.Value = value;
+        }
+
+        public void AddConnection(IEdge edge)
         {
             if (edge == null)
             {
@@ -51,7 +56,7 @@ namespace Dijkstra
             }
         }
 
-        public void RemoveConnection(Edge edge)
+        public void RemoveConnection(IEdge edge)
         {
             if (edge == null)
             {
@@ -80,32 +85,48 @@ namespace Dijkstra
             }
         }
 
-        public void UpdateNeighbourValuesInCollection(ICollection<Node> searchNodes)
+        public void UpdateNeighbourValuesInCollection(ICollection<INode> searchNodes)
         {
-            foreach (Edge edge in this.Connections)
+            foreach (IEdge edge in this.Connections)
             {
                 if (searchNodes.Contains(edge.EndNode) || searchNodes.Contains(edge.StartNode))
                 {
                     if (edge.EndNode == this)
                     {
-                        edge.StartNode.UpdateCurrentPathToNode(this, edge.Weight);
+                        (edge.StartNode as Node).UpdateCurrentPathToNode(this, edge.Weight);
                     }
                     else
                     {
-                        edge.EndNode.UpdateCurrentPathToNode(this, edge.Weight);
+                        (edge.EndNode as Node).UpdateCurrentPathToNode(this, edge.Weight);
                     }
                 }
             }
         }
 
-        private void UpdateCurrentPathToNode(Node updatingNode, float weight)
+        public string PrintPathToNode()
+        {
+            StringBuilder pathInfo = new StringBuilder();
+            pathInfo.AppendLine(boundaryString);
+            pathInfo.AppendLine($"Total Value: {this.Value}");
+            foreach (INode node in this.CurrentPathToNode)
+            {
+                pathInfo.AppendLine($"{node.NodeId} passed");
+            }
+
+            pathInfo.AppendLine($"{this.NodeId} reached");
+            pathInfo.AppendLine(boundaryString);
+
+            return pathInfo.ToString();
+        }
+
+        private void UpdateCurrentPathToNode(IPathToNode updatingNode, float weight)
         {
             float newValue = updatingNode.Value + weight;
             if (this.Value > newValue)
             {
                 this.Value = newValue;
                 this.CurrentPathToNode.Clear();
-                foreach (Node node in updatingNode.CurrentPathToNode)
+                foreach (INode node in updatingNode.CurrentPathToNode)
                 {
                     this.CurrentPathToNode.Add(node);
                 }
@@ -121,13 +142,13 @@ namespace Dijkstra
             nodeInfo.AppendLine($"Id: {this.NodeId}");
             nodeInfo.AppendLine($"Value: {this.Value}");
             nodeInfo.Append("Neighbour Nodes: ");
-            foreach (Node node in this.NeighbourNodes)
+            foreach (INode node in this.NeighbourNodes)
             {
                 nodeInfo.Append($"{node.NodeId}; ");
             }
             nodeInfo.AppendLine();
             nodeInfo.AppendLine("Connections: ");
-            foreach (Edge edge in this.Connections)
+            foreach (IEdge edge in this.Connections)
             {
                 nodeInfo.AppendLine(edge.ToString());
             }
@@ -148,7 +169,7 @@ namespace Dijkstra
                 return false;
             }
 
-            Node node = (Node)obj;
+            INode node = (INode)obj;
             if (node.NodeId == this.NodeId)
             {
                 return true;
