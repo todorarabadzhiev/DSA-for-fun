@@ -112,12 +112,12 @@ namespace Dijkstra
 
         private static PathGraph CreateMap()
         {
-            INode node_1 = new Node("1", 1);
-            INode node_2 = new Node("2", 2);
-            INode node_3 = new Node("3", 3);
-            INode node_4 = new Node("4", 4);
-            INode node_5 = new Node("5", 5);
-            INode node_6 = new Node("6", 6);
+            INode node_1 = new Node("1");
+            INode node_2 = new Node("2");
+            INode node_3 = new Node("3");
+            INode node_4 = new Node("4");
+            INode node_5 = new Node("5");
+            INode node_6 = new Node("6");
 
             IEdge edge_12 = new Edge(node_1, node_2, 7);
             IEdge edge_13 = new Edge(node_1, node_3, 9);

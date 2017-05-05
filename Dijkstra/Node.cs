@@ -17,16 +17,15 @@ namespace Dijkstra
 
         public Node(string id)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException("Id");
+            }
+
             this.NodeId = id;
             this.Connections = new List<IEdge>();
             this.NeighbourNodes = new List<INode>();
             this.CurrentPathToNode = new List<INode>();
-        }
-
-        public Node(string id, float value)
-            : this(id)
-        {
-            this.Value = value;
         }
 
         public void AddConnection(IEdge edge)
@@ -140,7 +139,6 @@ namespace Dijkstra
             StringBuilder nodeInfo = new StringBuilder();
             nodeInfo.AppendLine(boundaryString);
             nodeInfo.AppendLine($"Id: {this.NodeId}");
-            nodeInfo.AppendLine($"Value: {this.Value}");
             nodeInfo.Append("Neighbour Nodes: ");
             foreach (INode node in this.NeighbourNodes)
             {
