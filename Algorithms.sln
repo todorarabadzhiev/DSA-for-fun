@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dijkstra", "Dijkstra\Dijkst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraUnitTests", "DijkstraUnitTests\DijkstraUnitTests.csproj", "{23932553-80B3-411C-8A21-9E2EABB20686}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Structures", "Structures", "{8FE47E23-8425-4976-8DC1-16260BB5D867}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriorityQueue", "PriorityQueue\PriorityQueue.csproj", "{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,15 @@ Global
 		{23932553-80B3-411C-8A21-9E2EABB20686}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23932553-80B3-411C-8A21-9E2EABB20686}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23932553-80B3-411C-8A21-9E2EABB20686}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333} = {8FE47E23-8425-4976-8DC1-16260BB5D867}
 	EndGlobalSection
 EndGlobal
