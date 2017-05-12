@@ -7,31 +7,40 @@ namespace PriorityQueue
     public abstract class BaseHeap<T> where T : IComparable
     {
         protected const string Separator = " ";
-        protected readonly IList<T> TheHeap;
+        protected readonly IList<T> theHeap;
+
+        public int Count
+        {
+            get
+            {
+                return this.theHeap.Count;
+            }
+        }
+
         public BaseHeap()
         {
-            this.TheHeap = new List<T>();
+            this.theHeap = new List<T>();
 
             // IGNORING 0th VALUE
-            this.TheHeap.Add(default(T));
+            this.theHeap.Add(default(T));
         }
 
         public T GetTop()
         {
-            if (this.TheHeap.Count < 2)
+            if (this.theHeap.Count < 2)
             {
                 throw new ArgumentOutOfRangeException("The HEAP is empty!");
             }
 
-            return this.TheHeap[1];
+            return this.theHeap[1];
         }
 
         public void AddValue(T value)
         {
-            this.TheHeap.Add(value);
-            int index = (this.TheHeap.Count() - 1);
+            this.theHeap.Add(value);
+            int index = (this.theHeap.Count() - 1);
             int parentIndex = index / 2;
-            while (parentIndex > 0 && this.FirstValueHasPriority(value, this.TheHeap[parentIndex]))
+            while (parentIndex > 0 && this.FirstValueHasPriority(value, this.theHeap[parentIndex]))
             {
                 this.SwapValues(index, parentIndex);
                 index = parentIndex;
@@ -41,15 +50,15 @@ namespace PriorityQueue
 
         public void RemoveTop()
         {
-            this.SwapValues(1, this.TheHeap.Count - 1);
-            this.TheHeap.RemoveAt(this.TheHeap.Count - 1);
+            this.SwapValues(1, this.theHeap.Count - 1);
+            this.theHeap.RemoveAt(this.theHeap.Count - 1);
 
             this.Sink(1);
         }
 
         public override string ToString()
         {
-            string value = string.Join(Separator, this.TheHeap);
+            string value = string.Join(Separator, this.theHeap);
 
             // IGNORE 0th VALUE
             int index = value.IndexOf(Separator);
@@ -60,7 +69,7 @@ namespace PriorityQueue
 
         protected void Sink(int startIndex)
         {
-            if (startIndex > this.TheHeap.Count - 1 || startIndex < 1)
+            if (startIndex > this.theHeap.Count - 1 || startIndex < 1)
             {
                 return;
             }
@@ -68,20 +77,20 @@ namespace PriorityQueue
             int index = startIndex;
             int leftChildIndex = index * 2;
             int rightChildIndex = index * 2 + 1;
-            if (rightChildIndex < this.TheHeap.Count)
+            if (rightChildIndex < this.theHeap.Count)
             {
-                int maxChildIndex = this.FirstValueHasPriority(this.TheHeap[leftChildIndex], this.TheHeap[rightChildIndex]) ?
+                int maxChildIndex = this.FirstValueHasPriority(this.theHeap[leftChildIndex], this.theHeap[rightChildIndex]) ?
                     leftChildIndex : rightChildIndex;
 
-                while (this.FirstValueHasPriority(this.TheHeap[maxChildIndex], this.TheHeap[index]))
+                while (this.FirstValueHasPriority(this.theHeap[maxChildIndex], this.theHeap[index]))
                 {
                     this.SwapValues(index, maxChildIndex);
                     index = maxChildIndex;
                     leftChildIndex = index * 2;
                     rightChildIndex = index * 2 + 1;
-                    if (rightChildIndex < this.TheHeap.Count)
+                    if (rightChildIndex < this.theHeap.Count)
                     {
-                        maxChildIndex = this.FirstValueHasPriority(this.TheHeap[leftChildIndex], this.TheHeap[rightChildIndex]) ?
+                        maxChildIndex = this.FirstValueHasPriority(this.theHeap[leftChildIndex], this.theHeap[rightChildIndex]) ?
                             leftChildIndex : rightChildIndex;
                     }
                     else
@@ -91,8 +100,8 @@ namespace PriorityQueue
                 }
             }
 
-            if (leftChildIndex < this.TheHeap.Count &&
-                this.FirstValueHasPriority(this.TheHeap[leftChildIndex], this.TheHeap[index]))
+            if (leftChildIndex < this.theHeap.Count &&
+                this.FirstValueHasPriority(this.theHeap[leftChildIndex], this.theHeap[index]))
             {
                 this.SwapValues(index, leftChildIndex);
             }
@@ -100,9 +109,9 @@ namespace PriorityQueue
 
         protected void SwapValues(int index, int parentIndex)
         {
-            T temp = this.TheHeap[index];
-            this.TheHeap[index] = this.TheHeap[parentIndex];
-            this.TheHeap[parentIndex] = temp;
+            T temp = this.theHeap[index];
+            this.theHeap[index] = this.theHeap[parentIndex];
+            this.theHeap[parentIndex] = temp;
         }
 
         protected abstract bool FirstValueHasPriority(T firstValue, T secondValue);
