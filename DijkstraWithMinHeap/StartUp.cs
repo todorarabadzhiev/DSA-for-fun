@@ -10,8 +10,8 @@ namespace DijkstraWithMinHeap
         public static void Main()
         {
             var graph = CreateGraph();
-            int sourceIndex = 0;
-            int destinationIndex = 6;
+            int destinationIndex = 3;
+            int sourceIndex = 5;
             double cost = FindShortestPathBetween(graph, sourceIndex, destinationIndex);
             INode destination = graph[destinationIndex];
             int prevElementIndex = destination.PreviousElementIndex;
@@ -28,8 +28,9 @@ namespace DijkstraWithMinHeap
             Console.WriteLine(output.ToString());
         }
 
-        private static double FindShortestPathBetween(IList<INode> graph, int firstNodeIndex, int secondNodeIndex)
+        private static double FindShortestPathBetween(IList<INode> graph, int sourceNodeIndex, int destinationNodeIndex)
         {
+            graph[sourceNodeIndex].Value = 0;
             var pq = new MinHeap<INode>();
             foreach (INode node in graph)
             {
@@ -38,7 +39,7 @@ namespace DijkstraWithMinHeap
 
             INode currentNode = pq.GetTop();
             pq.RemoveTop();
-            while (pq.Count > 0 && currentNode.Index != secondNodeIndex)
+            while (pq.Count > 0 && currentNode.Index != destinationNodeIndex)
             {
                 foreach (var edge in currentNode.ListOfNeighbors)
                 {
@@ -62,7 +63,7 @@ namespace DijkstraWithMinHeap
         private static IList<INode> CreateGraph()
         {
             IList<INode> graph = new List<INode>();
-            graph.Add(new Node(0, 0, new List<KeyValuePair<int, double>>()
+            graph.Add(new Node(0, double.MaxValue, new List<KeyValuePair<int, double>>()
                 {
                     new KeyValuePair<int, double>(1, 1),
                     new KeyValuePair<int, double>(3, 3),
@@ -71,13 +72,13 @@ namespace DijkstraWithMinHeap
             graph.Add(new Node(1, double.MaxValue, new List<KeyValuePair<int, double>>()
                 {
                     new KeyValuePair<int, double>(0, 1),
-                    new KeyValuePair<int, double>(2, 5),
+                    new KeyValuePair<int, double>(2, 1),
                     new KeyValuePair<int, double>(4, 6)
                 }));
             graph.Add(new Node(2, double.MaxValue, new List<KeyValuePair<int, double>>()
                 {
-                    new KeyValuePair<int, double>(1, 5),
-                    new KeyValuePair<int, double>(5, 4),
+                    new KeyValuePair<int, double>(1, 1),
+                    new KeyValuePair<int, double>(5, 1),
                 }));
             graph.Add(new Node(3, double.MaxValue, new List<KeyValuePair<int, double>>()
                 {
@@ -95,7 +96,7 @@ namespace DijkstraWithMinHeap
                 }));
             graph.Add(new Node(5, double.MaxValue, new List<KeyValuePair<int, double>>()
                 {
-                    new KeyValuePair<int, double>(2, 4),
+                    new KeyValuePair<int, double>(2, 1),
                     new KeyValuePair<int, double>(4, 10),
                     new KeyValuePair<int, double>(6, 4)
                 }));
