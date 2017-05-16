@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{311B1CE8-0A57-48F2-8C2C-6FD97C4679BE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PriorityQueue</RootNamespace>
-    <AssemblyName>PriorityQueue</AssemblyName>
+    <RootNamespace>StartUp</RootNamespace>
+    <AssemblyName>StartUp</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,9 +32,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,13 +43,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseHeap.cs" />
-    <Compile Include="MaxHeap.cs" />
-    <Compile Include="MinHeap.cs" />
+    <Compile Include="StartUp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyBinaryTree\MyBinaryTree.csproj">
+      <Project>{5B6387C7-6CBD-4A94-B40E-5C13688E39E9}</Project>
+      <Name>MyBinaryTree</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PriorityQueue\PriorityQueue.csproj">
+      <Project>{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}</Project>
+      <Name>PriorityQueue</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DijkstraWithMinHeap
+﻿namespace DijkstraWithMinHeap
 {
     public interface IGraph
     {
