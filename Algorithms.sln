@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraUnitTests", "Dijkst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraWithMinHeap", "DijkstraWithMinHeap\DijkstraWithMinHeap.csproj", "{68D7C905-97B9-455B-B5D3-D7C239EBD8EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DijkstraWithMinHeapUnitTests", "DijkstraWithMinHeapUnitTests\DijkstraWithMinHeapUnitTests.csproj", "{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{68D7C905-97B9-455B-B5D3-D7C239EBD8EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68D7C905-97B9-455B-B5D3-D7C239EBD8EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68D7C905-97B9-455B-B5D3-D7C239EBD8EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +61,6 @@ Global
 		{9528509B-E007-4F8C-A819-CDE17E985CDA} = {00711BEC-01C2-4107-8D78-C2D1DC20FCF4}
 		{23932553-80B3-411C-8A21-9E2EABB20686} = {00711BEC-01C2-4107-8D78-C2D1DC20FCF4}
 		{68D7C905-97B9-455B-B5D3-D7C239EBD8EF} = {1B57B2E9-A32F-4ED7-A5B3-F3EB8465C424}
+		{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728} = {1B57B2E9-A32F-4ED7-A5B3-F3EB8465C424}
 	EndGlobalSection
 EndGlobal

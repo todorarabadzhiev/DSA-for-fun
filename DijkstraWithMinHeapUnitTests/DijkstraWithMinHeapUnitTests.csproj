@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{094C3233-06B8-49D4-AAB7-C83AAE72A929}</ProjectGuid>
+    <ProjectGuid>{D88FEF52-C891-4F2F-AF7B-6DCF47CBC728}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PriorityQueueUnitTests</RootNamespace>
-    <AssemblyName>PriorityQueueUnitTests</AssemblyName>
+    <RootNamespace>DijkstraWithMinHeapUnitTests</RootNamespace>
+    <AssemblyName>DijkstraWithMinHeapUnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -54,14 +54,18 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="BaseHeapClass\Constructor_Should.cs" />
-    <Compile Include="BaseHeapClass\Mocked\MockedMaxBaseHeap.cs" />
+    <Compile Include="GraphClass\Constructor_Should.cs" />
+    <Compile Include="GraphClass\Mocked\MockedGraph.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DijkstraWithMinHeap\DijkstraWithMinHeap.csproj">
+      <Project>{68D7C905-97B9-455B-B5D3-D7C239EBD8EF}</Project>
+      <Name>DijkstraWithMinHeap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PriorityQueue\PriorityQueue.csproj">
       <Project>{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}</Project>
       <Name>PriorityQueue</Name>
