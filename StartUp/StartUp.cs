@@ -6,6 +6,9 @@ namespace StartUp
 {
     public class StartUp
     {
+        private static double[] heapVaues = new double[] { 1, 4, 14, 0, 24, 2, 200, 20, 40, 25, 2 };
+        private static int[] binaryTreeValues = new int[] { 1, 3, 2, -1, 6, -136, -12, 8886, 0 };
+
         public static void Main()
         {
             //TestMaxHeap();
@@ -15,75 +18,42 @@ namespace StartUp
 
         private static void TestBinaryTree()
         {
-            BinaryTree<int> tree = new BinaryTree<int>();
+            IBinaryTree<int> tree = new BinaryTree<int>();
+            foreach (var value in binaryTreeValues)
+            {
+                tree.Add(value);
+            }
 
-            //Console.WriteLine(tree.Size);
-            //Console.WriteLine(tree.Contains(1));
+            Console.WriteLine(tree);
+            for (int i = 0; i < tree.Size; i++)
+            {
+                Console.WriteLine(tree[i]);
+            }
 
-            tree.Add(1);
-            tree.Add(2);
-            tree.Add(3);
-            tree.Add(-1);
-            tree.Add(6);
-            tree.Add(-136);
-            tree.Add(-12);
-            tree.Add(8886);
-            tree.Add(0);
-            //Console.WriteLine(tree.Size);
-            //Console.WriteLine(tree.Contains(1));
-            //Console.WriteLine(tree.Contains(2));
-            //Console.WriteLine(tree.Contains(3));
-            //Console.WriteLine(tree.Contains(0));
-            //Console.WriteLine(tree.Contains(6));
-            //Console.WriteLine(tree.Contains(-136));
-            //Console.WriteLine(tree.Contains(-12));
-            //Console.WriteLine(tree.Contains(8886));
-
-            tree.Remove(-1);
-            tree.Remove(8886);
-            Console.WriteLine(tree.Size);
-            Console.WriteLine(tree.Contains(1));
-            Console.WriteLine(tree.Contains(2));
-            Console.WriteLine(tree.Contains(3));
-            Console.WriteLine(tree.Contains(-1));
-            Console.WriteLine(tree.Contains(6));
-            Console.WriteLine(tree.Contains(-136));
-            Console.WriteLine(tree.Contains(-12));
-            Console.WriteLine(tree.Contains(8886));
-            Console.WriteLine(tree.Contains(0));
+            tree.Remove(binaryTreeValues[3]);
+            tree.Remove(binaryTreeValues[0]);
+            tree.Remove(binaryTreeValues[1]);
         }
 
         private static void TestMaxHeap()
         {
             BaseHeap<double> maxHeap = new MaxHeap<double>();
-            maxHeap.AddValue(1);
-            maxHeap.AddValue(4);
-            maxHeap.AddValue(14);
-            maxHeap.AddValue(0);
-            maxHeap.AddValue(24);
-            maxHeap.AddValue(2);
-            maxHeap.AddValue(200);
-            maxHeap.AddValue(20);
-            maxHeap.AddValue(40);
-            maxHeap.AddValue(25);
-            maxHeap.AddValue(2);
+            foreach (var value in heapVaues)
+            {
+                maxHeap.AddValue(value);
+            }
+
             Console.WriteLine(maxHeap);
         }
 
         private static void TestMinHeap()
         {
             BaseHeap<double> minHeap = new MinHeap<double>();
-            minHeap.AddValue(1);
-            minHeap.AddValue(4);
-            minHeap.AddValue(14);
-            minHeap.AddValue(0);
-            minHeap.AddValue(24);
-            minHeap.AddValue(2);
-            minHeap.AddValue(200);
-            minHeap.AddValue(20);
-            minHeap.AddValue(40);
-            minHeap.AddValue(25);
-            minHeap.AddValue(2);
+            foreach (var value in heapVaues)
+            {
+                minHeap.AddValue(value);
+            }
+
             Console.WriteLine(minHeap);
         }
     }

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MyBinaryTree
 {
-    public class BinaryTree<T> where T : IComparable<T>
+    public class BinaryTree<T> : IBinaryTree<T>, IEnumerable<T>
+        where T : IComparable<T>
     {
         private int size;
         public int Size
@@ -74,11 +78,103 @@ namespace MyBinaryTree
             this.Root = this.Remove(this.Root, value);
         }
 
+        public IEnumerator<T> GetEnumerator()
+        {
+            if (this.Root != null)
+            {
+                foreach (var item in this.Root)
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+        public T this[int index]
+        {
+            get
+            {
+                if (index < 0 || this.Size <= index)
+                {
+                    throw new ArgumentOutOfRangeException("Index");
+                }
+
+                return this.GetElementByIndex(this.Root, index);
+            }
+        }
+
+        private T GetElementByIndex(INode<T> node, int index)
+        {
+            if (node.Left == null)
+            {
+                if (node.Right == null || index == 0)
+                {
+                    return node.Value;
+                }
+
+                return this.GetElementByIndex(node.Right, index - 1);
+            }
+
+            if (node.Left.Size == index)
+            {
+                return node.Value;
+            }
+
+            if (node.Left.Size < index)
+            {
+                return this.GetElementByIndex(node.Right, index - node.Left.Size - 1);
+            }
+
+            return this.GetElementByIndex(node.Left, index);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append(string.Join("<->", this));
+
+            return result.ToString();
+        }
+
+        private INode<T> Add(INode<T> node, T value)
+        {
+            if (node == null)
+            {
+                node = new Node<T>(value);
+                this.Size++;
+                return node;
+            }
+
+            int cmp = value.CompareTo(node.Value);
+            if (cmp == 0)
+            {
+                // value already exists. Skip it!
+                return node;
+            }
+
+            if (cmp < 0)
+            {
+                node.Left = this.Add(node.Left, value);
+            }
+            else
+            {
+                node.Right = this.Add(node.Right, value);
+            }
+
+            this.UpdateNodeSize(node);
+
+            return node;
+        }
+
         private INode<T> Remove(INode<T> node, T value)
         {
             if (node == null)
             {
-                throw new ArgumentNullException("Node doesn't exist");
+                //Node doesn't exist
+                return null;
             }
 
             int cmp = value.CompareTo(node.Value);
@@ -106,11 +202,14 @@ namespace MyBinaryTree
 
                 if (parent != null)
                 {
-                    parent.Right = null;
+                    parent.Right = maxLeft.Left;
                     maxLeft.Left = node.Left;
+                    parent.Size -= 1;
                 }
 
                 maxLeft.Right = node.Right;
+                maxLeft.Size = node.Size - 1;
+
                 return maxLeft;
             }
 
@@ -123,34 +222,23 @@ namespace MyBinaryTree
                 node.Right = this.Remove(node.Right, value);
             }
 
+            this.UpdateNodeSize(node);
+
             return node;
         }
-        private INode<T> Add(INode<T> node, T value)
+
+        private void UpdateNodeSize(INode<T> node)
         {
-            if (node == null)
+            node.Size = 1;
+            if (node.Left != null)
             {
-                node = new Node<T>(value);
-                this.Size++;
-                return node;
+                node.Size += node.Left.Size;
             }
 
-            int cmp = value.CompareTo(node.Value);
-            if (cmp == 0)
+            if (node.Right != null)
             {
-                // value already exists. Skip it!
-                return node;
+                node.Size += node.Right.Size;
             }
-
-            if (cmp < 0)
-            {
-                node.Left = this.Add(node.Left, value);
-            }
-            else
-            {
-                node.Right = this.Add(node.Right, value);
-            }
-
-            return node;
         }
     }
 }
