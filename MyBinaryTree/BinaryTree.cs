@@ -89,9 +89,13 @@ namespace MyBinaryTree
             }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+
+        public override string ToString()
         {
-            return this.GetEnumerator();
+            StringBuilder result = new StringBuilder();
+            result.Append(string.Join("<->", this));
+
+            return result.ToString();
         }
         public T this[int index]
         {
@@ -104,6 +108,10 @@ namespace MyBinaryTree
 
                 return this.GetElementByIndex(this.Root, index);
             }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
 
         private T GetElementByIndex(INode<T> node, int index)
@@ -129,14 +137,6 @@ namespace MyBinaryTree
             }
 
             return this.GetElementByIndex(node.Left, index);
-        }
-
-        public override string ToString()
-        {
-            StringBuilder result = new StringBuilder();
-            result.Append(string.Join("<->", this));
-
-            return result.ToString();
         }
 
         private INode<T> Add(INode<T> node, T value)
