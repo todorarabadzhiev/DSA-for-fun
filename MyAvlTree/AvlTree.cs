@@ -371,14 +371,15 @@ namespace MyAvlTree
                 throw new ArgumentNullException("AVL Root RightChild");
             }
 
+            IAvlNode<T> midNode = rightChild.Left;
+            root.Right = midNode;
+            if (midNode != null)
+            {
+                midNode.Parent = root;
+            }
             rightChild.Parent = root.Parent;
             root.Parent = rightChild;
-            root.Right = rightChild.Left;
             rightChild.Left = root;
-            if (rightChild.Left != null)
-            {
-                rightChild.Left.Parent = root;
-            }
 
             if (rightChild.BalanceFactor == 0)
             {
@@ -406,14 +407,15 @@ namespace MyAvlTree
                 throw new ArgumentNullException("AVL Root LefttChild");
             }
 
+            IAvlNode<T> midNode = leftChild.Right;
+            root.Left = midNode;
+            if (midNode != null)
+            {
+                midNode.Parent = root;
+            }
             leftChild.Parent = root.Parent;
             root.Parent = leftChild;
-            root.Left = leftChild.Right;
             leftChild.Right = root;
-            if (leftChild.Right != null)
-            {
-                leftChild.Right.Parent = root;
-            }
 
             if (leftChild.BalanceFactor == 0)
             {
