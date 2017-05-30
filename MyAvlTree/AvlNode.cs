@@ -61,21 +61,31 @@ namespace MyAvlTree
         {
             StringBuilder result = new StringBuilder();
             result.Append(this.Value);
-            if (this.Parent != null)
+            if (this.Left != null)
             {
-                if (this.Parent.Left == this)
-                {
-                    result.Append("[L-");
-                }
-                else
-                {
-                    result.Append("[R-");
-                }
-                result.Append($"{this.Parent.Value}]");
+                result.Append($"[L:{this.Left.Value}]");
             }
             else
             {
-                result.Append("[*]");
+                result.Append("[L:x]");
+            }
+
+            if (this.Right != null)
+            {
+                result.Append($"[R:{this.Right.Value}]");
+            }
+            else
+            {
+                result.Append("[R:x]");
+            }
+
+            if (this.Parent != null)
+            {
+                result.Append($"[P:{this.Parent.Value}]");
+            }
+            else
+            {
+                result.Append("[P:*]");
             }
 
             return result.ToString(); 
