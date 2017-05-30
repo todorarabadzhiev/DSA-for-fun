@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 namespace MyBinaryTree
 {
-    internal class Node<T> : INode<T>, IEnumerable<T>
+    public class Node<T> : INode<T>, IEnumerable<T>
         where T : IComparable<T>
     {
         private int size;
+
         public int Size
         {
             get

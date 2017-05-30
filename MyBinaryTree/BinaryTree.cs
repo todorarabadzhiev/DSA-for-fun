@@ -114,6 +114,14 @@ namespace MyBinaryTree
             return this.GetEnumerator();
         }
 
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append(string.Join("<->", this));
+
+            return result.ToString();
+        }
+
         private T GetElementByIndex(INode<T> node, int index)
         {
             if (node.Left == null)

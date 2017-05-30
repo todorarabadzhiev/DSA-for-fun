@@ -50,10 +50,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyAvlTree\MyAvlTree.csproj">
-      <Project>{1039DFAC-29AF-4B9E-A54F-74198B184A16}</Project>
-      <Name>MyAvlTree</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MyBinaryTree\MyBinaryTree.csproj">
       <Project>{5B6387C7-6CBD-4A94-B40E-5C13688E39E9}</Project>
       <Name>MyBinaryTree</Name>
