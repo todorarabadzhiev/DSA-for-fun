@@ -61,6 +61,8 @@ namespace MyAvlTree
         {
             StringBuilder result = new StringBuilder();
             result.Append(this.Value);
+            result.Append($"_blns:{this.BalanceFactor}");
+            result.Append($"_size:{this.Size}_");
             if (this.Left != null)
             {
                 result.Append($"[L:{this.Left.Value}]");

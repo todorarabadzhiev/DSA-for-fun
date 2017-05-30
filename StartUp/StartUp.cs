@@ -34,9 +34,27 @@ namespace StartUp
             }
 
             //tree.Remove(binaryTreeValues[3]);
-            //tree.Remove(binaryTreeValues[0]);
-            //tree.Remove(binaryTreeValues[1]);
+            //Console.WriteLine(tree);
+            //for (int i = 0; i < tree.Size; i++)
+            //{
+            //    Console.WriteLine(tree[i]);
+            //}
 
+            //tree.Remove(binaryTreeValues[1]);
+            //Console.WriteLine(tree);
+            //for (int i = 0; i < tree.Size; i++)
+            //{
+            //    Console.WriteLine(tree[i]);
+            //}
+
+            //tree.Remove(binaryTreeValues[0]);
+            //Console.WriteLine(tree);
+            //for (int i = 0; i < tree.Size; i++)
+            //{
+            //    Console.WriteLine(tree[i]);
+            //}
+
+            //tree.Remove(binaryTreeValues[4]);
             //Console.WriteLine(tree);
             //for (int i = 0; i < tree.Size; i++)
             //{
