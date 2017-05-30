@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace MyBinaryTree
+namespace MyAvlTree
 {
-    public class BinaryTree<T> : IBinaryTree<T>, IEnumerable<T>
+    public class AvlTree<T> : IAvlTree<T>
         where T : IComparable<T>
     {
         private int size;
@@ -27,8 +29,8 @@ namespace MyBinaryTree
             }
         }
 
-        public INode<T> Root { get; set; }
-        public BinaryTree()
+        public IAvlNode<T> Root { get; set; }
+        public AvlTree()
         {
             this.Size = 0;
             this.Root = null;
@@ -36,7 +38,7 @@ namespace MyBinaryTree
 
         public bool Contains(T value)
         {
-            INode<T> node = this.Root;
+            IAvlNode<T> node = this.Root;
             while (node != null)
             {
                 int cmp = value.CompareTo(node.Value);
@@ -93,7 +95,7 @@ namespace MyBinaryTree
         {
             return this.GetEnumerator();
         }
-        public T this[int index]
+        public IAvlNode<T> this[int index]
         {
             get
             {
@@ -114,13 +116,13 @@ namespace MyBinaryTree
             return result.ToString();
         }
 
-        private T GetElementByIndex(INode<T> node, int index)
+        private IAvlNode<T> GetElementByIndex(IAvlNode<T> node, int index)
         {
             if (node.Left == null)
             {
                 if (node.Right == null || index == 0)
                 {
-                    return node.Value;
+                    return node;
                 }
 
                 return this.GetElementByIndex(node.Right, index - 1);
@@ -128,7 +130,7 @@ namespace MyBinaryTree
 
             if (node.Left.Size == index)
             {
-                return node.Value;
+                return node;
             }
 
             if (node.Left.Size < index)
@@ -139,11 +141,11 @@ namespace MyBinaryTree
             return this.GetElementByIndex(node.Left, index);
         }
 
-        private INode<T> Add(INode<T> node, T value)
+        private IAvlNode<T> Add(IAvlNode<T> node, T value)
         {
             if (node == null)
             {
-                node = new Node<T>(value);
+                node = new AvlNode<T>(value);
                 this.Size++;
                 return node;
             }
@@ -158,10 +160,12 @@ namespace MyBinaryTree
             if (cmp < 0)
             {
                 node.Left = this.Add(node.Left, value);
+                node.Left.Parent = node;
             }
             else
             {
                 node.Right = this.Add(node.Right, value);
+                node.Right.Parent = node;
             }
 
             this.UpdateNodeSize(node);
@@ -169,7 +173,7 @@ namespace MyBinaryTree
             return node;
         }
 
-        private INode<T> Remove(INode<T> node, T value)
+        private IAvlNode<T> Remove(IAvlNode<T> node, T value)
         {
             if (node == null)
             {
@@ -192,8 +196,8 @@ namespace MyBinaryTree
                 }
 
                 // node has Left && Right children
-                INode<T> maxLeft = node.Left;
-                INode<T> parent = null;
+                IAvlNode<T> maxLeft = node.Left;
+                IAvlNode<T> parent = null;
                 while (maxLeft.Right != null)
                 {
                     parent = maxLeft;
@@ -216,10 +220,18 @@ namespace MyBinaryTree
             if (cmp < 0)
             {
                 node.Left = this.Remove(node.Left, value);
+                if (node.Left != null)
+                {
+                    node.Left.Parent = node;
+                }
             }
             else
             {
                 node.Right = this.Remove(node.Right, value);
+                if (node.Right != null)
+                {
+                    node.Right.Parent = node;
+                }
             }
 
             this.UpdateNodeSize(node);
@@ -227,7 +239,7 @@ namespace MyBinaryTree
             return node;
         }
 
-        private void UpdateNodeSize(INode<T> node)
+        private void UpdateNodeSize(IAvlNode<T> node)
         {
             node.Size = 1;
             if (node.Left != null)
@@ -239,6 +251,37 @@ namespace MyBinaryTree
             {
                 node.Size += node.Right.Size;
             }
+        }
+        private IAvlNode<T> RotateLeft(IAvlNode<T> root, IAvlNode<T> rightChild)
+        {
+            if (root == null)
+            {
+                throw new ArgumentNullException("AVL Root");
+            }
+
+            if (rightChild == null)
+            {
+                throw new ArgumentNullException("AVL Root RightChild");
+            }
+
+            IAvlNode<T> movingNode = rightChild.Left;
+            rightChild.Parent = root.Parent;
+            root.Parent = rightChild;
+            root.Right = rightChild.Left;
+            rightChild.Left = root;
+
+            if (rightChild.BalanceFactor == 0)
+            {
+                root.BalanceFactor = 1;
+                rightChild.BalanceFactor = -1;
+            }
+            else
+            {
+                root.BalanceFactor = 0;
+                rightChild.BalanceFactor = 0;
+            }
+
+            return rightChild;
         }
     }
 }

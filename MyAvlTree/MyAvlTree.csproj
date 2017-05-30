@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{311B1CE8-0A57-48F2-8C2C-6FD97C4679BE}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{1BBA9296-9E64-4D81-AA27-1234287206D9}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StartUp</RootNamespace>
-    <AssemblyName>StartUp</AssemblyName>
+    <RootNamespace>MyAvlTree</RootNamespace>
+    <AssemblyName>MyAvlTree</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,25 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StartUp.cs" />
+    <Compile Include="AvlNode.cs" />
+    <Compile Include="AvlTree.cs" />
+    <Compile Include="IAvlTree.cs" />
+    <Compile Include="IAvlNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MyAvlTree\MyAvlTree.csproj">
-      <Project>{1BBA9296-9E64-4D81-AA27-1234287206D9}</Project>
-      <Name>MyAvlTree</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MyBinaryTree\MyBinaryTree.csproj">
-      <Project>{5B6387C7-6CBD-4A94-B40E-5C13688E39E9}</Project>
-      <Name>MyBinaryTree</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PriorityQueue\PriorityQueue.csproj">
-      <Project>{8A6DEF9C-6BAE-4D8C-BE83-D7E5F8B2D333}</Project>
-      <Name>PriorityQueue</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

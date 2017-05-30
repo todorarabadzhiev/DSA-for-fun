@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MyBinaryTree
+namespace MyAvlTree
 {
-    public class Node<T> : INode<T>, IEnumerable<T>
+    public class AvlNode<T> : IAvlNode<T>
         where T : IComparable<T>
     {
         private int size;
-
+        private int balanceFactor;
         public int Size
         {
             get
@@ -26,17 +26,35 @@ namespace MyBinaryTree
                 this.size = value;
             }
         }
+        public int BalanceFactor
+        {
+            get
+            {
+                return this.balanceFactor;
+            }
 
+            set
+            {
+                if (value < -1 || 1 < value)
+                {
+                    throw new ArgumentNullException("BalanceFactor");
+                }
+
+                this.balanceFactor = value;
+            }
+        }
         public T Value { get; set; }
-        public INode<T> Right { get; set; }
-        public INode<T> Left { get; set; }
-
-        public Node(T value)
+        public IAvlNode<T> Right { get; set; }
+        public IAvlNode<T> Left { get; set; }
+        public IAvlNode<T> Parent { get; set; }
+        public AvlNode(T value)
         {
             this.Value = value;
             this.Size = 1;
+            this.BalanceFactor = 0;
             this.Right = null;
             this.Left = null;
+            this.Parent = null;
         }
 
         public IEnumerator<T> GetEnumerator()
