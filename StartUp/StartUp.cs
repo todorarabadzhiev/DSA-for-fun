@@ -33,12 +33,12 @@ namespace StartUp
                 Console.WriteLine(tree[i]);
             }
 
-            //tree.Remove(binaryTreeValues[3]);
-            //Console.WriteLine(tree);
-            //for (int i = 0; i < tree.Size; i++)
-            //{
-            //    Console.WriteLine(tree[i]);
-            //}
+            tree.Remove(binaryTreeValues[3]);
+            Console.WriteLine(tree);
+            for (int i = 0; i < tree.Size; i++)
+            {
+                Console.WriteLine(tree[i]);
+            }
 
             //tree.Remove(binaryTreeValues[1]);
             //Console.WriteLine(tree);

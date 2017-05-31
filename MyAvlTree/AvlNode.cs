@@ -9,12 +9,29 @@ namespace MyAvlTree
         where T : IComparable<T>
     {
         private int size;
-        private int balanceFactor;
+        private int height;
+        public int Height
+        {
+            get
+            {
+                return this == null ? 0 : this.height;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentNullException("Height");
+                }
+
+                this.height = value;
+            }
+        }
         public int Size
         {
             get
             {
-                return this.size;
+                return this == null ? 0 : this.size;
             }
 
             set
@@ -31,17 +48,7 @@ namespace MyAvlTree
         {
             get
             {
-                return this.balanceFactor;
-            }
-
-            set
-            {
-                if (value < -1 || 1 < value)
-                {
-                    throw new ArgumentNullException("BalanceFactor");
-                }
-
-                this.balanceFactor = value;
+                return this.GetBalance();
             }
         }
         public T Value { get; set; }
@@ -52,17 +59,53 @@ namespace MyAvlTree
         {
             this.Value = value;
             this.Size = 1;
-            this.BalanceFactor = 0;
+            this.Height = 1;
+            //this.BalanceFactor = 0;
             this.Right = null;
             this.Left = null;
             this.Parent = null;
+        }
+        public void Update()
+        {
+            int leftSize = this.Left?.Size ?? 0;
+            int rightSize = this.Right?.Size ?? 0;
+            this.Size = leftSize + rightSize + 1;
+
+            int leftHeight = this.Left?.Height ?? 0;
+            int rightHeight = this.Right?.Height ?? 0;
+            this.Height = Math.Max(leftHeight, rightHeight) + 1;
+        }
+        public IAvlNode<T> RotateRight()
+        {
+            IAvlNode<T> newRoot = this.Left;
+            IAvlNode<T> leftRight = newRoot.Right;
+            newRoot.Right = this;
+            this.Left = leftRight;
+
+            this.Update();
+            newRoot.Update();
+
+            return newRoot;
+        }
+        public IAvlNode<T> RotateLeft()
+        {
+            IAvlNode<T> newRoot = this.Right;
+            IAvlNode<T> rightLeft = newRoot.Left;
+            newRoot.Left = this;
+            this.Right = rightLeft;
+
+            this.Update();
+            newRoot.Update();
+
+            return newRoot;
         }
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
             result.Append(this.Value);
             result.Append($"_blns:{this.BalanceFactor}");
-            result.Append($"_size:{this.Size}_");
+            result.Append($"_size:{this.Size}");
+            result.Append($"_height:{this.Height}_");
             if (this.Left != null)
             {
                 result.Append($"[L:{this.Left.Value}]");
@@ -118,6 +161,16 @@ namespace MyAvlTree
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        private int GetBalance()
+        {
+            int leftHeight = this.Left?.Height ?? 0;
+            int rightHeight = this.Right?.Height ?? 0;
+
+            int result = this == null ? 0 : rightHeight - leftHeight;
+
+            return result;
         }
     }
 }

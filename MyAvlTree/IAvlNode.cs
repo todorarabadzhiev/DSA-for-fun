@@ -8,9 +8,13 @@ namespace MyAvlTree
     {
         T Value { get; set; }
         int Size { get; set; }
-        int BalanceFactor { get; set; }
+        int Height { get; set; }
+        int BalanceFactor { get; }
         IAvlNode<T> Right { get; set; }
         IAvlNode<T> Left { get; set; }
         IAvlNode<T> Parent { get; set; }
+        void Update();
+        IAvlNode<T> RotateRight();
+        IAvlNode<T> RotateLeft();
     }
 }

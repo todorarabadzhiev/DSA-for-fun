@@ -79,10 +79,10 @@ namespace MyAvlTree
 
         public void Remove(T value)
         {
-            IAvlNode<T> newRoot;
-            this.Root = this.RemoveIteratively(this.Root, value, out newRoot);
-            //this.Root = this.RemoveRecursively(this.Root, value, out newRoot);
-            this.BalanceAfterRemoval(newRoot);
+            //IAvlNode<T> newRoot;
+            //this.Root = this.RemoveIteratively(this.Root, value, out newRoot);
+            this.Root = this.RemoveRecursively(this.Root, value);
+            //this.BalanceAfterRemoval(newRoot);
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -176,41 +176,12 @@ namespace MyAvlTree
                 node.Right.Parent = node;
             }
 
-            this.UpdateNodeSize(node);
+            node.Update();
 
             return node;
         }
-        //private IAvlNode<T> RemoveRecursively(IAvlNode<T> node, T value, out IAvlNode<T> newRoot)
-        //{
-        //    newRoot = null;
-        //    if (node == null)
-        //    {
-        //        //Node doesn't exist
-        //        return null;
-        //    }
-
-        //    int cmp = value.CompareTo(node.Value);
-        //    if (cmp < 0)
-        //    {
-        //        node.Left = this.RemoveRecursively(node.Left, value, out newRoot);
-        //    }
-        //    else if (cmp > 0)
-        //    {
-        //        node.Right = this.RemoveRecursively(node.Right, value, out newRoot);
-        //    }
-        //    else
-        //    {
-                
-        //    }
-
-        //    this.UpdateNodeSize(node);
-
-        //    return node;
-        //}
-
-        private IAvlNode<T> RemoveIteratively(IAvlNode<T> node, T value, out IAvlNode<T> newRoot)
+        private IAvlNode<T> RemoveRecursively(IAvlNode<T> node, T value)
         {
-            newRoot = null;
             if (node == null)
             {
                 //Node doesn't exist
@@ -220,94 +191,167 @@ namespace MyAvlTree
             int cmp = value.CompareTo(node.Value);
             if (cmp == 0)
             {
-                this.Size--;
                 if (node.Left == null)
                 {
-                    if (node == this.Root)
-                    {
-                        node.Right.Parent = null;
-                    }
-
-                    newRoot = node.Right;
                     return node.Right;
                 }
 
                 if (node.Right == null)
                 {
-                    if (node == this.Root)
-                    {
-                        node.Left.Parent = null;
-                    }
-
-                    newRoot = node.Left;
                     return node.Left;
                 }
 
-                // node has Left && Right children
-                IAvlNode<T> maxLeft = node.Left;
-                IAvlNode<T> parent = null;
-                while (maxLeft.Right != null)
-                {
-                    parent = maxLeft;
-                    maxLeft = maxLeft.Right;
-                }
+                IAvlNode<T> nextInOrder;
+                node.Left = RemoveRightmost(node.Left, out nextInOrder);
 
-                if (parent != null)
-                {
-                    parent.Right = maxLeft.Left;
-                    maxLeft.Left = node.Left;
-                    maxLeft.Left.Parent = maxLeft;
-                    parent.Size -= 1;
-                }
+                nextInOrder.Left = node.Left;
+                nextInOrder.Right = node.Right;
 
-                maxLeft.Right = node.Right;
-                maxLeft.Right.Parent = maxLeft;
-                maxLeft.Size = node.Size - 1;
-                if (node == this.Root)
-                {
-                    maxLeft.Parent = null;
-                }
-
-                newRoot = maxLeft;
-                return maxLeft;
+                nextInOrder.Update();
+                return nextInOrder;
             }
 
             if (cmp < 0)
             {
-                node.Left = this.RemoveIteratively(node.Left, value, out newRoot);
-                if (node.Left != null)
+                node.Left = this.RemoveRecursively(node.Left, value);
+                if (node.BalanceFactor < -1)
                 {
-                    node.Left.Parent = node;
+                    if (node.Right.BalanceFactor > 0)
+                    {
+                        node.Right = node.Right.RotateRight();
+                    }
+                    node = node.RotateLeft();
                 }
             }
             else
             {
-                node.Right = this.RemoveIteratively(node.Right, value, out newRoot);
-                if (node.Right != null)
+                node.Right = this.RemoveRecursively(node.Right, value);
+                if (node.BalanceFactor > -1)
                 {
-                    node.Right.Parent = node;
+                    if (node.Left.BalanceFactor > 0)
+                    {
+                        node.Left = node.Left.RotateLeft();
+                    }
+                    node = node.RotateRight();
                 }
             }
 
-            this.UpdateNodeSize(node);
+            node.Update();
 
             return node;
         }
 
-        private void UpdateNodeSize(IAvlNode<T> node)
+        //private IAvlNode<T> RemoveIteratively(IAvlNode<T> node, T value, out IAvlNode<T> newRoot)
+        //{
+        //    newRoot = null;
+        //    if (node == null)
+        //    {
+        //        //Node doesn't exist
+        //        return null;
+        //    }
+
+        //    int cmp = value.CompareTo(node.Value);
+        //    if (cmp == 0)
+        //    {
+        //        this.Size--;
+        //        if (node.Left == null && node.Right == null)
+        //        {
+        //            return null;
+        //        }
+
+        //        if (node.Left == null)
+        //        {
+        //            if (node == this.Root)
+        //            {
+        //                node.Right.Parent = null;
+        //            }
+
+        //            newRoot = node.Right;
+        //            return node.Right;
+        //        }
+
+        //        if (node.Right == null)
+        //        {
+        //            if (node == this.Root)
+        //            {
+        //                node.Left.Parent = null;
+        //            }
+
+        //            newRoot = node.Left;
+        //            return node.Left;
+        //        }
+
+        //        // node has Left && Right children
+        //        IAvlNode<T> maxLeft = node.Left;
+        //        IAvlNode<T> parent = null;
+        //        while (maxLeft.Right != null)
+        //        {
+        //            parent = maxLeft;
+        //            maxLeft = maxLeft.Right;
+        //        }
+
+        //        if (parent != null)
+        //        {
+        //            parent.Right = maxLeft.Left;
+        //            maxLeft.Left = node.Left;
+        //            maxLeft.Left.Parent = maxLeft;
+        //            parent.Size -= 1;
+        //        }
+
+        //        maxLeft.Right = node.Right;
+        //        maxLeft.Right.Parent = maxLeft;
+        //        maxLeft.Size = node.Size - 1;
+        //        if (node == this.Root)
+        //        {
+        //            maxLeft.Parent = null;
+        //        }
+
+        //        newRoot = maxLeft;
+        //        return maxLeft;
+        //    }
+
+        //    if (cmp < 0)
+        //    {
+        //        node.Left = this.RemoveIteratively(node.Left, value, out newRoot);
+        //        if (node.Left != null)
+        //        {
+        //            node.Left.Parent = node;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        node.Right = this.RemoveIteratively(node.Right, value, out newRoot);
+        //        if (node.Right != null)
+        //        {
+        //            node.Right.Parent = node;
+        //        }
+        //    }
+
+        //    node.Update();
+
+        //    return node;
+        //}
+        private IAvlNode<T> RemoveRightmost(IAvlNode<T> root, out IAvlNode<T> nextInOrder)
         {
-            node.Size = 1;
-            if (node.Left != null)
+            if (root.Right == null)
             {
-                node.Size += node.Left.Size;
+                nextInOrder = root;
+                return root.Left;
             }
 
-            if (node.Right != null)
+            root.Right = this.RemoveRightmost(root.Right, out nextInOrder);
+            if (root.BalanceFactor > 1)
             {
-                node.Size += node.Right.Size;
+                if (root.Left.BalanceFactor < 0)
+                {
+                    root.Left = root.Left.RotateLeft();
+                }
+                root = root.RotateRight();
             }
+
+            root.Update();
+            return root;
         }
-
         private void BalanceAfterAddition(IAvlNode<T> addedNode)
         {
             IAvlNode<T> node = addedNode;
@@ -334,11 +378,11 @@ namespace MyAvlTree
                     {
                         if (parent.BalanceFactor > 0)
                         {
-                            parent.BalanceFactor = 0;
+                            parent.Update();
                             break;
                         }
 
-                        parent.BalanceFactor = -1;
+                        parent.Update();
                         node = node.Parent;
                         parent = node.Parent;
                         continue;
@@ -362,11 +406,11 @@ namespace MyAvlTree
                     {
                         if (parent.BalanceFactor < 0)
                         {
-                            parent.BalanceFactor = 0;
+                            parent.Update();
                             break;
                         }
 
-                        parent.BalanceFactor = 1;
+                        parent.Update();
                         node = node.Parent;
                         parent = node.Parent;
                         continue;
@@ -395,99 +439,103 @@ namespace MyAvlTree
             }
         }
 
-        private void BalanceAfterRemoval(IAvlNode<T> root)
-        {
-            IAvlNode<T> node = root;
-            IAvlNode<T> parent = node?.Parent ?? null;
-            IAvlNode<T> grandParent;
-            int b;
-            while (parent != null)
-            {
-                grandParent = parent.Parent;
-                if (parent.Left == node)
-                {
-                    if (parent.BalanceFactor > 0)
-                    {
-                        IAvlNode<T> z = parent.Right;
-                        b = z.BalanceFactor;
-                        if (b < 0)
-                        {
-                            node = this.RotateRightLeft(parent, z);
-                        }
-                        else
-                        {
-                            node = this.RotateLeft(parent, z);
-                        }
-                    }
-                    else
-                    {
-                        if (parent.BalanceFactor == 0)
-                        {
-                            parent.BalanceFactor = 1;
-                            break;
-                        }
+        //private void BalanceAfterRemoval(IAvlNode<T> root)
+        //{
+        //    IAvlNode<T> node = root;
+        //    IAvlNode<T> parent = node?.Parent ?? null;
+        //    IAvlNode<T> grandParent;
+        //    int b;
+        //    while (parent != null)
+        //    {
+        //        grandParent = parent.Parent;
+        //        if (parent.Left == node)
+        //        {
+        //            if (parent.BalanceFactor > 0)
+        //            {
+        //                IAvlNode<T> z = parent.Right;
+        //                b = z.BalanceFactor;
+        //                if (b < 0)
+        //                {
+        //                    node = this.RotateRightLeft(parent, z);
+        //                }
+        //                else
+        //                {
+        //                    node = this.RotateLeft(parent, z);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (parent.BalanceFactor == 0)
+        //                {
+        //                    //parent.BalanceFactor = 1;
+        //                    parent.Update();
+        //                    break;
+        //                }
 
-                        node = parent;
-                        node.BalanceFactor = 0;
-                        parent = grandParent;
-                        continue;
-                    }
-                }
-                else
-                {
-                    if (parent.BalanceFactor < 0)
-                    {
-                        IAvlNode<T> z = parent.Left;
-                        b = z.BalanceFactor;
-                        if (b > 0)
-                        {
-                            node = this.RotateLeftRight(parent, z);
-                        }
-                        else
-                        {
-                            node = this.RotateRight(parent, z);
-                        }
-                    }
-                    else
-                    {
-                        if (parent.BalanceFactor == 0)
-                        {
-                            parent.BalanceFactor = -1;
-                            break;
-                        }
+        //                node = parent;
+        //                //node.BalanceFactor = 0;
+        //                node.Update();
+        //                parent = grandParent;
+        //                continue;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (parent.BalanceFactor < 0)
+        //            {
+        //                IAvlNode<T> z = parent.Left;
+        //                b = z.BalanceFactor;
+        //                if (b > 0)
+        //                {
+        //                    node = this.RotateLeftRight(parent, z);
+        //                }
+        //                else
+        //                {
+        //                    node = this.RotateRight(parent, z);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (parent.BalanceFactor == 0)
+        //                {
+        //                    //parent.BalanceFactor = -1;
+        //                    parent.Update();
+        //                    break;
+        //                }
 
-                        node = parent;
-                        node.BalanceFactor = 0;
-                        parent = grandParent;
-                        continue;
-                    }
-                }
+        //                node = parent;
+        //                //node.BalanceFactor = 0;
+        //                node.Update();
+        //                parent = grandParent;
+        //                continue;
+        //            }
+        //        }
 
-                node.Parent = grandParent;
-                if (grandParent != null)
-                {
-                    if (parent == grandParent.Left)
-                    {
-                        grandParent.Left = node;
-                    }
-                    else
-                    {
-                        grandParent.Right = node;
-                    }
-                    if (b == 0)
-                    {
-                        break;
-                    }
-                }
-                else
-                {
-                    this.Root = node;
-                    continue;
-                }
+        //        node.Parent = grandParent;
+        //        if (grandParent != null)
+        //        {
+        //            if (parent == grandParent.Left)
+        //            {
+        //                grandParent.Left = node;
+        //            }
+        //            else
+        //            {
+        //                grandParent.Right = node;
+        //            }
+        //            if (b == 0)
+        //            {
+        //                break;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            this.Root = node;
+        //            continue;
+        //        }
 
-                parent = grandParent;
-            }
-        }
+        //        parent = grandParent;
+        //    }
+        //}
 
         private IAvlNode<T> RotateLeft(IAvlNode<T> root, IAvlNode<T> rightChild)
         {
@@ -511,16 +559,18 @@ namespace MyAvlTree
             root.Parent = rightChild;
             rightChild.Left = root;
 
-            if (rightChild.BalanceFactor == 0)
-            {
-                root.BalanceFactor = 1;
-                rightChild.BalanceFactor = -1;
-            }
-            else
-            {
-                root.BalanceFactor = 0;
-                rightChild.BalanceFactor = 0;
-            }
+            //if (rightChild.BalanceFactor == 0)
+            //{
+            //    root.BalanceFactor = 1;
+            //    rightChild.BalanceFactor = -1;
+            //}
+            //else
+            //{
+            //    root.BalanceFactor = 0;
+            //    rightChild.BalanceFactor = 0;
+            //}
+            root.Update();
+            rightChild.Update();
 
             return rightChild;
         }
@@ -547,16 +597,18 @@ namespace MyAvlTree
             root.Parent = leftChild;
             leftChild.Right = root;
 
-            if (leftChild.BalanceFactor == 0)
-            {
-                root.BalanceFactor = -1;
-                leftChild.BalanceFactor = 1;
-            }
-            else
-            {
-                root.BalanceFactor = 0;
-                leftChild.BalanceFactor = 0;
-            }
+            //if (leftChild.BalanceFactor == 0)
+            //{
+            //    root.BalanceFactor = -1;
+            //    leftChild.BalanceFactor = 1;
+            //}
+            //else
+            //{
+            //    root.BalanceFactor = 0;
+            //    leftChild.BalanceFactor = 0;
+            //}
+            root.Update();
+            leftChild.Update();
 
             return leftChild;
         }
@@ -584,23 +636,26 @@ namespace MyAvlTree
             newRoot.Left = root;
             root.Parent = newRoot;
 
-            if (newRoot.BalanceFactor > 0)
-            {
-                root.BalanceFactor = -1;
-                rightChild.BalanceFactor = 0;
-            }
-            else if (newRoot.BalanceFactor == 0)
-            {
-                root.BalanceFactor = 0;
-                rightChild.BalanceFactor = 0;
-            }
-            else
-            {
-                root.BalanceFactor = 0;
-                rightChild.BalanceFactor = 1;
-            }
+            //if (newRoot.BalanceFactor > 0)
+            //{
+            //    root.BalanceFactor = -1;
+            //    rightChild.BalanceFactor = 0;
+            //}
+            //else if (newRoot.BalanceFactor == 0)
+            //{
+            //    root.BalanceFactor = 0;
+            //    rightChild.BalanceFactor = 0;
+            //}
+            //else
+            //{
+            //    root.BalanceFactor = 0;
+            //    rightChild.BalanceFactor = 1;
+            //}
 
-            newRoot.BalanceFactor = 0;
+            //newRoot.BalanceFactor = 0;
+            root.Update();
+            rightChild.Update();
+            newRoot.Update();
 
             return newRoot;
         }
@@ -628,23 +683,26 @@ namespace MyAvlTree
             newRoot.Right = root;
             root.Parent = newRoot;
 
-            if (newRoot.BalanceFactor > 0)
-            {
-                root.BalanceFactor = 0;
-                leftChild.BalanceFactor = -1;
-            }
-            else if (newRoot.BalanceFactor == 0)
-            {
-                root.BalanceFactor = 0;
-                leftChild.BalanceFactor = 0;
-            }
-            else
-            {
-                root.BalanceFactor = -1;
-                leftChild.BalanceFactor = 0;
-            }
+            //if (newRoot.BalanceFactor > 0)
+            //{
+            //    root.BalanceFactor = 0;
+            //    leftChild.BalanceFactor = -1;
+            //}
+            //else if (newRoot.BalanceFactor == 0)
+            //{
+            //    root.BalanceFactor = 0;
+            //    leftChild.BalanceFactor = 0;
+            //}
+            //else
+            //{
+            //    root.BalanceFactor = -1;
+            //    leftChild.BalanceFactor = 0;
+            //}
 
-            newRoot.BalanceFactor = 0;
+            //newRoot.BalanceFactor = 0;
+            root.Update();
+            leftChild.Update();
+            newRoot.Update();
 
             return newRoot;
         }
