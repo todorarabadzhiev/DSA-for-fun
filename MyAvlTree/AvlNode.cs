@@ -79,8 +79,11 @@ namespace MyAvlTree
         {
             IAvlNode<T> newRoot = this.Left;
             IAvlNode<T> leftRight = newRoot.Right;
+            leftRight.Parent = this;
             newRoot.Right = this;
+            newRoot.Parent = this.Parent;
             this.Left = leftRight;
+            this.Parent = newRoot;
 
             this.Update();
             newRoot.Update();
@@ -91,8 +94,11 @@ namespace MyAvlTree
         {
             IAvlNode<T> newRoot = this.Right;
             IAvlNode<T> rightLeft = newRoot.Left;
+            rightLeft.Parent = this;
             newRoot.Left = this;
+            newRoot.Parent = this.Parent;
             this.Right = rightLeft;
+            this.Parent = newRoot;
 
             this.Update();
             newRoot.Update();
