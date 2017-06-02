@@ -70,9 +70,7 @@ namespace MyAvlTree
 
         public void Add(T value)
         {
-            IAvlNode<T> addedNode;
-            this.Root = this.Add(this.Root, value, out addedNode);
-            this.BalanceAfterAddition(addedNode);
+            this.Root = this.Add(this.Root, value);
         }
 
         public void Remove(T value)
@@ -142,14 +140,12 @@ namespace MyAvlTree
             return this.GetElementByIndex(node.Left, index);
         }
 
-        private IAvlNode<T> Add(IAvlNode<T> node, T value, out IAvlNode<T> addedNode)
+        private IAvlNode<T> Add(IAvlNode<T> node, T value)
         {
-            addedNode = null;
             if (node == null)
             {
                 node = new AvlNode<T>(value);
                 this.Size++;
-                addedNode = node;
                 return node;
             }
 
@@ -162,19 +158,46 @@ namespace MyAvlTree
 
             if (cmp < 0)
             {
-                node.Left = this.Add(node.Left, value, out addedNode);
-                node.Left.Parent = node;
+                node.Left = this.Add(node.Left, value);
+                if (node.BalanceFactor < -1)
+                {
+                    if (node.Left.BalanceFactor > 0)
+                    {
+                        node.Left = node.Left.RotateLeft();
+                    }
+
+                    node = node.RotateRight();
+                }
+
+                if (node.Left != null)
+                {
+                    node.Left.Parent = node;
+                }
             }
             else
             {
-                node.Right = this.Add(node.Right, value, out addedNode);
-                node.Right.Parent = node;
+                node.Right = this.Add(node.Right, value);
+                if (node.BalanceFactor > 1)
+                {
+                    if (node.Right.BalanceFactor < 0)
+                    {
+                        node.Right = node.Right.RotateRight();
+                    }
+
+                    node = node.RotateLeft();
+                }
+
+                if (node.Right != null)
+                {
+                    node.Right.Parent = node;
+                }
             }
 
             node.Update();
 
             return node;
         }
+
         private IAvlNode<T> Remove(IAvlNode<T> node, T value)
         {
             if (node == null)
@@ -315,253 +338,6 @@ namespace MyAvlTree
 
             root.Update();
             return root;
-        }
-
-        private void BalanceAfterAddition(IAvlNode<T> addedNode)
-        {
-            IAvlNode<T> node = addedNode;
-            IAvlNode<T> parent = node?.Parent ?? null;
-            IAvlNode<T> grandParent;
-            IAvlNode<T> newRoot;
-            while (parent != null)
-            {
-                if (parent.Left == node)
-                {
-                    if (parent.BalanceFactor < 0)
-                    {
-                        grandParent = parent.Parent;
-                        if (node.BalanceFactor > 0)
-                        {
-                            newRoot = this.RotateLeftRight(parent, node);
-                        }
-                        else
-                        {
-                            newRoot = this.RotateRight(parent, node);
-                        }
-                    }
-                    else
-                    {
-                        if (parent.BalanceFactor > 0)
-                        {
-                            parent.Update();
-                            break;
-                        }
-
-                        parent.Update();
-                        node = node.Parent;
-                        parent = node.Parent;
-                        continue;
-                    }
-                }
-                else
-                {
-                    if (parent.BalanceFactor > 0)
-                    {
-                        grandParent = parent.Parent;
-                        if (node.BalanceFactor < 0)
-                        {
-                            newRoot = this.RotateRightLeft(parent, node);
-                        }
-                        else
-                        {
-                            newRoot = this.RotateLeft(parent, node);
-                        }
-                    }
-                    else
-                    {
-                        if (parent.BalanceFactor < 0)
-                        {
-                            parent.Update();
-                            break;
-                        }
-
-                        parent.Update();
-                        node = node.Parent;
-                        parent = node.Parent;
-                        continue;
-                    }
-                }
-
-                newRoot.Parent = grandParent;
-                if (grandParent != null)
-                {
-                    if (parent == grandParent.Left)
-                    {
-                        grandParent.Left = newRoot;
-                    }
-                    else
-                    {
-                        grandParent.Right = newRoot;
-                    }
-
-                    break;
-                }
-                else
-                {
-                    this.Root = newRoot;
-                    break;
-                }
-            }
-        }
-
-        private IAvlNode<T> RotateLeft(IAvlNode<T> root, IAvlNode<T> rightChild)
-        {
-            if (root == null)
-            {
-                throw new ArgumentNullException("AVL Root");
-            }
-
-            if (rightChild == null)
-            {
-                throw new ArgumentNullException("AVL Root RightChild");
-            }
-
-            IAvlNode<T> midNode = rightChild.Left;
-            root.Right = midNode;
-            if (midNode != null)
-            {
-                midNode.Parent = root;
-            }
-            rightChild.Parent = root.Parent;
-            root.Parent = rightChild;
-            rightChild.Left = root;
-
-            root.Update();
-            rightChild.Update();
-
-            return rightChild;
-        }
-
-        private IAvlNode<T> RotateRight(IAvlNode<T> root, IAvlNode<T> leftChild)
-        {
-            if (root == null)
-            {
-                throw new ArgumentNullException("AVL Root");
-            }
-
-            if (leftChild == null)
-            {
-                throw new ArgumentNullException("AVL Root LefttChild");
-            }
-
-            IAvlNode<T> midNode = leftChild.Right;
-            root.Left = midNode;
-            if (midNode != null)
-            {
-                midNode.Parent = root;
-            }
-            leftChild.Parent = root.Parent;
-            root.Parent = leftChild;
-            leftChild.Right = root;
-
-            //if (leftChild.BalanceFactor == 0)
-            //{
-            //    root.BalanceFactor = -1;
-            //    leftChild.BalanceFactor = 1;
-            //}
-            //else
-            //{
-            //    root.BalanceFactor = 0;
-            //    leftChild.BalanceFactor = 0;
-            //}
-            root.Update();
-            leftChild.Update();
-
-            return leftChild;
-        }
-
-        private IAvlNode<T> RotateRightLeft(IAvlNode<T> root, IAvlNode<T> rightChild)
-        {
-            IAvlNode<T> newRoot = rightChild.Left;
-            IAvlNode<T> midRight = newRoot.Right;
-            rightChild.Left = midRight;
-            if (midRight != null)
-            {
-                midRight.Parent = rightChild;
-            }
-
-            newRoot.Right = rightChild;
-            rightChild.Parent = newRoot;
-
-            IAvlNode<T> midLeft = newRoot.Left;
-            root.Right = midLeft;
-            if (midLeft != null)
-            {
-                midLeft.Parent = root;
-            }
-
-            newRoot.Left = root;
-            root.Parent = newRoot;
-
-            //if (newRoot.BalanceFactor > 0)
-            //{
-            //    root.BalanceFactor = -1;
-            //    rightChild.BalanceFactor = 0;
-            //}
-            //else if (newRoot.BalanceFactor == 0)
-            //{
-            //    root.BalanceFactor = 0;
-            //    rightChild.BalanceFactor = 0;
-            //}
-            //else
-            //{
-            //    root.BalanceFactor = 0;
-            //    rightChild.BalanceFactor = 1;
-            //}
-
-            //newRoot.BalanceFactor = 0;
-            root.Update();
-            rightChild.Update();
-            newRoot.Update();
-
-            return newRoot;
-        }
-
-        private IAvlNode<T> RotateLeftRight(IAvlNode<T> root, IAvlNode<T> leftChild)
-        {
-            IAvlNode<T> newRoot = leftChild.Right;
-            IAvlNode<T> midLeft = newRoot.Left;
-            leftChild.Right = midLeft;
-            if (midLeft != null)
-            {
-                midLeft.Parent = leftChild;
-            }
-
-            newRoot.Left = leftChild;
-            leftChild.Parent = newRoot;
-
-            IAvlNode<T> midRight = newRoot.Right;
-            root.Left = midRight;
-            if (midRight != null)
-            {
-                midRight.Parent = root;
-            }
-
-            newRoot.Right = root;
-            root.Parent = newRoot;
-
-            //if (newRoot.BalanceFactor > 0)
-            //{
-            //    root.BalanceFactor = 0;
-            //    leftChild.BalanceFactor = -1;
-            //}
-            //else if (newRoot.BalanceFactor == 0)
-            //{
-            //    root.BalanceFactor = 0;
-            //    leftChild.BalanceFactor = 0;
-            //}
-            //else
-            //{
-            //    root.BalanceFactor = -1;
-            //    leftChild.BalanceFactor = 0;
-            //}
-
-            //newRoot.BalanceFactor = 0;
-            root.Update();
-            leftChild.Update();
-            newRoot.Update();
-
-            return newRoot;
         }
     }
 }

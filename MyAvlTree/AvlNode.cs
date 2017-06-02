@@ -60,7 +60,6 @@ namespace MyAvlTree
             this.Value = value;
             this.Size = 1;
             this.Height = 1;
-            //this.BalanceFactor = 0;
             this.Right = null;
             this.Left = null;
             this.Parent = null;
@@ -79,7 +78,11 @@ namespace MyAvlTree
         {
             IAvlNode<T> newRoot = this.Left;
             IAvlNode<T> leftRight = newRoot.Right;
-            leftRight.Parent = this;
+            if (leftRight != null)
+            {
+                leftRight.Parent = this;
+            }
+
             newRoot.Right = this;
             newRoot.Parent = this.Parent;
             this.Left = leftRight;
@@ -94,7 +97,11 @@ namespace MyAvlTree
         {
             IAvlNode<T> newRoot = this.Right;
             IAvlNode<T> rightLeft = newRoot.Left;
-            rightLeft.Parent = this;
+            if (rightLeft != null)
+            {
+                rightLeft.Parent = this;
+            }
+
             newRoot.Left = this;
             newRoot.Parent = this.Parent;
             this.Right = rightLeft;
